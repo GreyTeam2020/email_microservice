@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+    sendemail:
+        depends_on:
+            - redis_sendemail
+        restart: always
+        build: .
+        ports:
+            - "5001:5001"
+        expose:
+            - "5001"
+    celery_sendemail:
+        depends_on:
+            - redis_sendemail
+            - sendemail
+        build: .
+        restart: always
+        command: celery -A celery worker --loglevel=DEBUG
+        links:
+            -  redis_sendemail
+    redis_sendemail:
+        image: "redis:alpine"
+        container_name: rd01_sendemail
+        expose:
+            - "6380"

@@ -1,0 +1,56 @@
+openapi: 3.0.1
+info:
+  title: Send Email Service API
+  description: Send Email from GoOutSafe with Microservices
+  version: "0.1"
+servers:
+- url: /
+paths:
+    /send_email/confirm_registration:
+      post:
+        tags:
+          - Send Email
+        summary: A sample survey.
+        operationId: app.confirm_registration
+        requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserRegistered'
+        responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Result'
+components:
+  schemas:
+    UserRegistered:
+      required:
+        - name
+        - email
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: User name
+          example: "Eleonora"
+        email:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: User email
+          example: "ele@gmail.com"
+    Result:
+      required:
+        - result
+      type: object
+      properties:
+        result:
+          type: string
+          default: Type of result
+          example: "Ok"
