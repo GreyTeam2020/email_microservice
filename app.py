@@ -20,7 +20,7 @@ def confirm_registration():
     return {"result": "OK"}, 200
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 app = connexion.App(__name__)
 app.add_api("swagger.yml")
 # set the WSGI application callable to allow using uWSGI:

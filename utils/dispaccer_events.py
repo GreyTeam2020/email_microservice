@@ -1,4 +1,12 @@
 from app_constant import *
+from background import (
+    send_email_to_confirm_registration,
+    send_alert_new_covid19_about_previous_booking,
+    send_possible_positive_contact_to_friend,
+    send_possible_positive_contact_celery,
+    send_booking_confirmation_to_friends_celery,
+    send_positive_in_restaurant,
+)
 
 _CELERY = True
 
@@ -22,13 +30,12 @@ class DispatcherMessage:
         file app_constant.py and check if there is condition to dispatc the test
         :return: nothings
         """
-        """
         if _CELERY is False:
             return
         if type_message == REGISTRATION_EMAIL:
-            #send_email_to_confirm_registration.apply_async(args=params)
+            send_email_to_confirm_registration.apply_async(args=params)
         elif type_message == NEW_COVID_TO_RESTAURANT_BOOKING:
-            # send_alert_new_covid19_about_previous_booking.apply_async(args=params)
+            send_alert_new_covid19_about_previous_booking.apply_async(args=params)
         elif type_message == NEW_POSITIVE_WAS_IN_RESTAURANT:
             send_positive_in_restaurant.apply_async(args=params)
         elif type_message == EMAIL_TO_FRIEND:
@@ -37,4 +44,3 @@ class DispatcherMessage:
             send_possible_positive_contact_celery.apply_async(args=params)
         elif type_message == CONFIRMATION_BOOKING:
             send_booking_confirmation_to_friends_celery.apply_async(args=params)
-        """

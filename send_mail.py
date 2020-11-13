@@ -10,8 +10,9 @@ def init_email(flask_app):
     :param app: Flask app
     :return:
     """
-    global email
+    global app
     app = flask_app
+    global email
     email = Mail(app)
 
 

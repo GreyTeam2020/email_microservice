@@ -16,11 +16,11 @@ services:
             - sendemail
         build: .
         restart: always
-        command: celery -A celery worker --loglevel=DEBUG
+        command: celery -A background.celery_app worker --loglevel=DEBUG
         links:
             -  redis
     redis:
         image: "redis:alpine"
-        container_name: rd01
+        container_name: rd02
         expose:
             - "6379"

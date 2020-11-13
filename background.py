@@ -1,3 +1,4 @@
+import logging
 from celery import Celery
 from flask import Flask
 
@@ -8,7 +9,7 @@ from send_mail import (
     send_booking_confirmation_to_friends,
     send_positive_in_restaurant,
     send_positive_booking_in_restaurant,
-    init_email
+    init_email,
 )
 
 _CELERY = True
@@ -20,17 +21,17 @@ def create_celery_app():
     Thanks https://github.com/nebularazer/flask-celery-example
     """
     ## redis inside the http is the name of network that is called like the containser
-    BACKEND = "redis://{}:{}".format("rd01", "6379")
-    BROKER = "redis://{}:{}/0".format("rd01", "6379")
-    if _CELERY is True:
-        return Celery(__name__, backend=BACKEND, broker=BROKER)
+
+    BACKEND="redis://{}:6379".format("rd02"),
+    BROKER="redis://{}:6379/0".format("rd02")
+    logging.debug("BACKEND={} and BROKER={}".format(BACKEND, BROKER))
+    if _CELERY is False:
+        return Celery(__name__, broker=BROKER, result_backend=BACKEND)
     app = Flask(__name__)
     app.config.from_object("config.DebugConfiguration")
 
-    celery_app = Celery(app.import_name, backend=BACKEND, broker=BROKER)
-
+    celery_app = Celery(app.import_name, broker=BROKER, result_backend=BACKEND)
     init_email(app)
-    # celery.conf.update(app.config)
 
     class ContextTask(celery_app.Task):
         def __call__(self, *args, **kwargs):
@@ -46,7 +47,7 @@ celery_app = create_celery_app()
 
 
 @celery_app.task()
-def send_email_to_confirm_registration(to_email: str, to_name: str, with_toke: str):
+def send_email_to_confirm_registration(to_email: str, to_name: str):
     """
     Perform the celery task to send the email registration
     it take the following element
@@ -54,7 +55,7 @@ def send_email_to_confirm_registration(to_email: str, to_name: str, with_toke: s
     :param to_name: The user name to send the message
     :param with_toke: The token of user on system
     """
-    send_registration_confirm(to_email, to_name, with_toke)
+    send_registration_confirm(to_email, to_name)
 
 
 @celery_app.task()
