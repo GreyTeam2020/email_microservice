@@ -22,7 +22,7 @@ def create_celery_app():
     ## redis inside the http is the name of network that is called like the containser
     BACKEND = "redis://{}:{}".format("rd01", "6379")
     BROKER = "redis://{}:{}/0".format("rd01", "6379")
-    if _CELERY is False:
+    if _CELERY is True:
         return Celery(__name__, backend=BACKEND, broker=BROKER)
     app = Flask(__name__)
     app.config.from_object("config.DebugConfiguration")
