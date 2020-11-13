@@ -1,7 +1,6 @@
 import connexion
 import logging
 import connexion
-from send_mail import init_email
 from flask import request
 from utils.dispaccer_events import DispatcherMessage
 from app_constant import REGISTRATION_EMAIL
@@ -12,9 +11,10 @@ def confirm_registration():
     This method is a flask method that send the confirm registration email
     to the user.
     """
-    email_user = request.get_json("email")
+    json = request.get_json()
+    email_user = json["email"]
     logging.debug("Email of new user: {}".format(email_user))
-    name_user = request.get_json("name")
+    name_user = json["name"]
     logging.debug("Name new user: {}".format(name_user))
     DispatcherMessage.send_message(REGISTRATION_EMAIL, [email_user, name_user])
     return {"result": "OK"}, 200

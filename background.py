@@ -20,8 +20,8 @@ def create_celery_app():
     Thanks https://github.com/nebularazer/flask-celery-example
     """
     ## redis inside the http is the name of network that is called like the containser
-    BACKEND = "redis://{}:{}".format("rd01_sendemail", "6380")
-    BROKER = "redis://{}:{}/0".format("rd01_sendemail", "6380")
+    BACKEND = "redis://{}:{}".format("rd01", "6379")
+    BROKER = "redis://{}:{}/0".format("rd01", "6379")
     if _CELERY is False:
         return Celery(__name__, backend=BACKEND, broker=BROKER)
     app = Flask(__name__)
