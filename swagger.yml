@@ -10,7 +10,7 @@ paths:
       post:
         tags:
           - Send Email
-        summary: A sample survey.
+        summary: Send an email to the user to confirm the registration.
         operationId: app.confirm_registration
         requestBody:
             required: true
@@ -18,6 +18,25 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/UserRegistered'
+        responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Result'
+    /send_email/booking_confirmation:
+      post:
+        tags:
+          - Send Email
+        summary: An email to send the confermation of a new refistration
+        operationId: app.confirm_booking_registration
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewBooking'
         responses:
           200:
             description: OK
@@ -45,6 +64,42 @@ components:
           type: string
           description: User email
           example: "ele@gmail.com"
+    NewBooking:
+      required:
+        - email_user
+        - user_name
+        - restaurant_name
+        - friends
+        - booking_time
+      type: object
+      properties:
+        email_user:
+          type: string
+          description: User email that made the reservation
+          example: "amazing@email.com"
+        user_name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: User name that made the reservation
+          example: "Giorgia"
+        restaurant_name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Restaurant name
+          example: "Il Pomodorino"
+        friends:
+          type: array
+          description: The list of friend included inside the booking
+          items:
+            type: string
+            example: "friend@email.com"
+          example: ["friend@email.com"]
+        booking_time:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
     Result:
       required:
         - result

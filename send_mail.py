@@ -197,7 +197,6 @@ def _send_booking_confirmation_to_friend(
     to_friend: str, to_name: str, to_restaurants: str, date_time
 ):
     """
-    TODO add the position on the map
     This method send the confirmation email to a email friend with the name of the
     :param to_friend:
     :param to_name:
@@ -207,7 +206,7 @@ def _send_booking_confirmation_to_friend(
     """
     subject = "New Reservation in {toRestaurants}"
     body = """ 
-        Hi {toName},<br>
+        Hi friend,<br>
         You have a reservation in {toRestaurants} by {toName} in {toDate}.
         <br>Regards.<br> 
         <br>GoOutSafe Team</br>

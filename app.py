@@ -1,9 +1,11 @@
+from datetime import datetime
+
 import connexion
 import logging
 import connexion
-from flask import request
+from flask import request, current_app
 from utils.dispaccer_events import DispatcherMessage
-from app_constant import REGISTRATION_EMAIL
+from app_constant import REGISTRATION_EMAIL, CONFIRMATION_BOOKING
 
 
 def confirm_registration():
@@ -13,10 +15,33 @@ def confirm_registration():
     """
     json = request.get_json()
     email_user = json["email"]
-    logging.debug("Email of new user: {}".format(email_user))
+    current_app.logger.debug("Email of new user: {}".format(email_user))
     name_user = json["name"]
-    logging.debug("Name new user: {}".format(name_user))
+    current_app.logger.debug("Name new user: {}".format(name_user))
     DispatcherMessage.send_message(REGISTRATION_EMAIL, [email_user, name_user])
+    return {"result": "OK"}, 200
+
+
+def confirm_booking_registration():
+    """
+    This method send the email to confirm the booking
+    """
+    json = request.get_json()
+    email_user = json["email_user"]
+    current_app.logger.debug("User name: {}".format(email_user))
+    user_name = json["user_name"]
+    current_app.logger.debug("User name: {}".format(user_name))
+    restaurant_name = json["restaurant_name"]
+    current_app.logger.debug("Restaurant name: {}".format(restaurant_name))
+    friends = json["friends"]
+    current_app.logger.debug("Fiends: {}".format(friends))
+    date_string = json["booking_time"]
+    current_app.logger.debug("In date string: {}".format(date_string))
+    booking_time = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
+    current_app.logger.debug("In date: {}".format(booking_time))
+    DispatcherMessage.send_message(
+        CONFIRMATION_BOOKING, [email_user, user_name, restaurant_name, friends, booking_time]
+    )
     return {"result": "OK"}, 200
 
 

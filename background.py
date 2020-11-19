@@ -22,8 +22,8 @@ def create_celery_app():
     """
     ## redis inside the http is the name of network that is called like the containser
 
-    BACKEND="redis://{}:6380".format("rd02"),
-    BROKER="redis://{}:6380/0".format("rd02")
+    BACKEND = ("redis://{}:6380".format("rd02"),)
+    BROKER = "redis://{}:6380/0".format("rd02")
     logging.debug("BACKEND={} and BROKER={}".format(BACKEND, BROKER))
     if _CELERY is False:
         return Celery(__name__, broker=BROKER, result_backend=BACKEND)
