@@ -5,9 +5,17 @@ import logging
 import connexion
 from flask import request, current_app
 from utils.dispaccer_events import DispatcherMessage
-from app_constant import REGISTRATION_EMAIL, CONFIRMATION_BOOKING, NEW_POSITIVE_WAS_IN_RESTAURANT, EMAIL_TO_FRIEND, NEW_COVID_TO_RESTAURANT_BOOKING, FUTURE_RESERVATION_FRIENDS
+from app_constant import (
+    REGISTRATION_EMAIL,
+    CONFIRMATION_BOOKING,
+    NEW_POSITIVE_WAS_IN_RESTAURANT,
+    EMAIL_TO_FRIEND,
+    NEW_COVID_TO_RESTAURANT_BOOKING,
+    FUTURE_RESERVATION_FRIENDS,
+)
 from model.restaurant_model import RestaurantsModel
 from model.user_model import UserModel
+
 
 def confirm_registration():
     """
@@ -41,9 +49,11 @@ def confirm_booking_registration():
     booking_time = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
     current_app.logger.debug("In date: {}".format(booking_time))
     DispatcherMessage.send_message(
-        CONFIRMATION_BOOKING, [email_user, user_name, restaurant_name, friends, booking_time]
+        CONFIRMATION_BOOKING,
+        [email_user, user_name, restaurant_name, friends, booking_time],
     )
     return {"result": "OK"}, 200
+
 
 def send_possible_covid_contact():
     """
@@ -67,13 +77,25 @@ def send_possible_covid_contact():
         restaurant = RestaurantsModel()
         restaurant.fill_from_json(json_rest)
         restaurants.append(restaurant)
-        DispatcherMessage.send_message(NEW_POSITIVE_WAS_IN_RESTAURANT,
-                                       [restaurant.owner_email, restaurant.owner_email,
-                                        str(restaurant.date_booking), restaurant.name])
+        DispatcherMessage.send_message(
+            NEW_POSITIVE_WAS_IN_RESTAURANT,
+            [
+                restaurant.owner_email,
+                restaurant.owner_email,
+                str(restaurant.date_booking),
+                restaurant.name,
+            ],
+        )
         for json_friend in restaurant.friends:
-            DispatcherMessage.send_message(EMAIL_TO_FRIEND,
-                                           [json_friend, restaurant.owner_email,
-                                            str(restaurant.date_booking), restaurant.name])
+            DispatcherMessage.send_message(
+                EMAIL_TO_FRIEND,
+                [
+                    json_friend,
+                    restaurant.owner_email,
+                    str(restaurant.date_booking),
+                    restaurant.name,
+                ],
+            )
 
     json_restaurant = json_request["future_restaurants"]
     restaurants = []
@@ -81,18 +103,25 @@ def send_possible_covid_contact():
         restaurant = RestaurantsModel()
         restaurant.fill_from_json(json_rest)
         restaurants.append(restaurant)
-        DispatcherMessage.send_message(NEW_COVID_TO_RESTAURANT_BOOKING,
-                                       [restaurant.owner_email, restaurant.owner_email,
-                                        str(restaurant.date_booking), restaurant.name])
+        DispatcherMessage.send_message(
+            NEW_COVID_TO_RESTAURANT_BOOKING,
+            [
+                restaurant.owner_email,
+                restaurant.owner_email,
+                str(restaurant.date_booking),
+                restaurant.name,
+            ],
+        )
         for json_friend in restaurant.friends:
-            DispatcherMessage.send_message(FUTURE_RESERVATION_FRIENDS,
-                                           [json_friend, restaurant.owner_email,
-                                            str(restaurant.date_booking), restaurant.name])
-
-    # A message to the owner of the restaurants
-    # it take in inputs the following parameter
-    # to_email, to_name, date_possible_contact, restaurant_name
-    # TODO only the list of friend is not enogth, maybe I need to inject this inside the restaurants
+            DispatcherMessage.send_message(
+                FUTURE_RESERVATION_FRIENDS,
+                [
+                    json_friend,
+                    restaurant.owner_email,
+                    str(restaurant.date_booking),
+                    restaurant.name,
+                ],
+            )
     return {"result", "OK"}, 200
 
 

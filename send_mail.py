@@ -164,7 +164,7 @@ def send_future_reservation_problem_to_friend(
     body = (
         "Hi,<br>"
         'you have a reservation at restaurant "{restaurantName}" in date {datePossibleContact},'
-        'but {namePositive} of reservation was maker as positive.<br> '
+        "but {namePositive} of reservation was maker as positive.<br> "
         "<br>Please contact the restaurants and the authority at 911 and follow regulations at the following link:<br> "
         "http://www.salute.gov.it/portale/nuovocoronavirus/homeNuovoCoronavirus.jsp<br> "
     )
