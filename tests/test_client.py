@@ -23,7 +23,7 @@ class TestClient:
             "user_name": "Giorgia",
             "restaurant_name": "Il Pomodorino",
             "friends": ["friend@email.com"],
-            "booking_time": "2017-07-21T17:32:28+00:00",
+            "booking_time": "2017-07-21T17:32:28Z",
         }
         response = Utils.new_booking(client, request)
         assert response.status_code == 200
@@ -41,7 +41,7 @@ class TestClient:
                     "name": "Il Ristorante che non c'è",
                     "owner_email": "user@mail.com",
                     "owner_name": "Owner",
-                    "date_booking": "2017-07-21T17:32:28+00:00",
+                    "date_booking": "2017-07-21T17:32:28Z",
                     "friends": ["friend@email.com"],
                 }
             ],
@@ -50,7 +50,7 @@ class TestClient:
                     "name": "Il Ristorante che non c'è",
                     "owner_email": "user@mail.com",
                     "owner_name": "Owner",
-                    "date_booking": "2017-07-21T17:32:28+00:00",
+                    "date_booking": "2017-07-21T17:32:28Z",
                     "friends": ["friend@email.com"],
                 }
             ],
