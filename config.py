@@ -27,3 +27,16 @@ class DebugConfiguration(object):
     MAIL_PASSWORD = "SJzStSXX8XBHvDjY"
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
+
+
+class TestConfiguration(object):
+    DEBUG = True
+    TESTING = True
+    SECRET_KEY = "DEBUG_flask-session-insecure-secret-key"
+    HASH_ROUNDS = 100000
+    MAIL_SERVER = "smtp.gmail.com"
+    MAIL_PORT = "465"
+    MAIL_USERNAME = "greyteam2020@gmail.com"
+    MAIL_PASSWORD = "SJzStSXX8XBHvDjY"
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
