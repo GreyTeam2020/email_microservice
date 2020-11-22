@@ -121,7 +121,7 @@ def send_possible_covid_contact():
                     restaurant.name,
                 ],
             )
-    return {"result", "OK"}, 200
+    return {"result": "OK"}, 200
 
 
 logging.basicConfig(level=logging.DEBUG)
