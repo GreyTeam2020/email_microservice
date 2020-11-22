@@ -121,7 +121,6 @@ components:
           example: 2017-07-21T17:32:28Z
     PossibleContacts:
       required:
-        - friends
         - user_positive
         - past_restaurants
         - future_restaurants
