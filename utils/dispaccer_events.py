@@ -2,7 +2,7 @@ from app_constant import *
 from background import (
     send_email_to_confirm_registration,
     send_alert_new_covid19_about_previous_booking,
-    send_possible_positive_contact_to_friend,
+    send_possible_positive_contact_to_friend_celery,
     send_possible_positive_contact_celery,
     send_booking_confirmation_to_friends_celery,
     send_booking_problem_to_friends_celery,
@@ -40,7 +40,7 @@ class DispatcherMessage:
         elif type_message == NEW_POSITIVE_WAS_IN_RESTAURANT:
             send_positive_in_restaurant_celery.apply_async(args=params)
         elif type_message == EMAIL_TO_FRIEND:
-            send_possible_positive_contact_to_friend.apply_async(args=params)
+            send_possible_positive_contact_to_friend_celery.apply_async(args=params)
         elif type_message == NEW_POSITIVE_CONTACT:
             send_possible_positive_contact_celery.apply_async(args=params)
         elif type_message == CONFIRMATION_BOOKING:
