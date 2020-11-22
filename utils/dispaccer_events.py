@@ -6,7 +6,7 @@ from background import (
     send_possible_positive_contact_celery,
     send_booking_confirmation_to_friends_celery,
     send_booking_problem_to_friends_celery,
-    send_positive_in_restaurant,
+    send_positive_in_restaurant_celery,
 )
 
 _CELERY = True
@@ -38,7 +38,7 @@ class DispatcherMessage:
         elif type_message == NEW_COVID_TO_RESTAURANT_BOOKING:
             send_alert_new_covid19_about_previous_booking.apply_async(args=params)
         elif type_message == NEW_POSITIVE_WAS_IN_RESTAURANT:
-            send_positive_in_restaurant.apply_async(args=params)
+            send_positive_in_restaurant_celery.apply_async(args=params)
         elif type_message == EMAIL_TO_FRIEND:
             send_possible_positive_contact_to_friend.apply_async(args=params)
         elif type_message == NEW_POSITIVE_CONTACT:
