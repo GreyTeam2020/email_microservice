@@ -91,7 +91,6 @@ def send_possible_covid_contact():
                 EMAIL_TO_FRIEND,
                 [
                     json_friend,
-                    restaurant.owner_email,
                     str(restaurant.date_booking),
                     restaurant.name,
                 ],
