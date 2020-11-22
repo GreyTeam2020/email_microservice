@@ -7,5 +7,6 @@ from .background import (
     send_possible_positive_contact_celery,
     send_booking_confirmation_to_friends_celery,
     send_positive_in_restaurant,
+    send_booking_problem_to_friends_celery,
     celery_app,
 )

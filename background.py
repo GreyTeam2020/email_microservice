@@ -9,6 +9,7 @@ from send_mail import (
     send_booking_confirmation_to_friends,
     send_positive_in_restaurant,
     send_positive_booking_in_restaurant,
+    send_future_reservation_problem_to_friend,
     init_email,
 )
 
@@ -133,4 +134,22 @@ def send_booking_confirmation_to_friends_celery(
     """
     send_booking_confirmation_to_friends(
         to_email, to_name, to_restaurants, to_friend_list, date_time
+    )
+
+
+@celery_app.task()
+def send_booking_problem_to_friends_celery(
+    to_email: str, name_positive: str, date_booking: str, restaurant_name: str
+):
+    """
+
+    :param to_email:
+    :param to_name:
+    :param to_restaurants:
+    :param to_friend_list:
+    :param date_time:
+    :return:
+    """
+    send_future_reservation_problem_to_friend(
+        to_email, name_positive, date_booking, restaurant_name
     )

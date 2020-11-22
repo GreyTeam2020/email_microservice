@@ -5,7 +5,16 @@ import logging
 import connexion
 from flask import request, current_app
 from utils.dispaccer_events import DispatcherMessage
-from app_constant import REGISTRATION_EMAIL, CONFIRMATION_BOOKING
+from app_constant import (
+    REGISTRATION_EMAIL,
+    CONFIRMATION_BOOKING,
+    NEW_POSITIVE_WAS_IN_RESTAURANT,
+    EMAIL_TO_FRIEND,
+    NEW_COVID_TO_RESTAURANT_BOOKING,
+    FUTURE_RESERVATION_FRIENDS,
+)
+from model.restaurant_model import RestaurantsModel
+from model.user_model import UserModel
 
 
 def confirm_registration():
@@ -40,8 +49,78 @@ def confirm_booking_registration():
     booking_time = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
     current_app.logger.debug("In date: {}".format(booking_time))
     DispatcherMessage.send_message(
-        CONFIRMATION_BOOKING, [email_user, user_name, restaurant_name, friends, booking_time]
+        CONFIRMATION_BOOKING,
+        [email_user, user_name, restaurant_name, friends, booking_time],
     )
+    return {"result": "OK"}, 200
+
+
+def send_possible_covid_contact():
+    """
+    This is the unique method to send the possible covid19 contacts email.
+    :return: the flask response that looks like {"result": "OK"} with status code 200
+    """
+    json_request = request.get_json()
+    current_app.logger.debug("Request with body\n{}".format(json_request))
+
+    # A message to the friends, it take the following paramiters
+    # to_email, date_possible_contact, restaurant_name
+    json_user = json_request["user_positive"]
+    user_positive = UserModel()
+    user_positive.fill_from_json(json_user)
+
+    # A message to the restaurants booking
+    # to_email, to_name, email_user, restaurant_name
+    json_restaurant = json_request["past_restaurants"]
+    restaurants = []
+    for json_rest in json_restaurant:
+        restaurant = RestaurantsModel()
+        restaurant.fill_from_json(json_rest)
+        restaurants.append(restaurant)
+        DispatcherMessage.send_message(
+            NEW_POSITIVE_WAS_IN_RESTAURANT,
+            [
+                restaurant.owner_email,
+                restaurant.owner_email,
+                str(restaurant.date_booking),
+                restaurant.name,
+            ],
+        )
+        for json_friend in restaurant.friends:
+            DispatcherMessage.send_message(
+                EMAIL_TO_FRIEND,
+                [
+                    json_friend,
+                    str(restaurant.date_booking),
+                    restaurant.name,
+                ],
+            )
+
+    json_restaurant = json_request["future_restaurants"]
+    restaurants = []
+    for json_rest in json_restaurant:
+        restaurant = RestaurantsModel()
+        restaurant.fill_from_json(json_rest)
+        restaurants.append(restaurant)
+        DispatcherMessage.send_message(
+            NEW_COVID_TO_RESTAURANT_BOOKING,
+            [
+                restaurant.owner_email,
+                restaurant.owner_email,
+                str(restaurant.date_booking),
+                restaurant.name,
+            ],
+        )
+        for json_friend in restaurant.friends:
+            DispatcherMessage.send_message(
+                FUTURE_RESERVATION_FRIENDS,
+                [
+                    json_friend,
+                    restaurant.owner_email,
+                    str(restaurant.date_booking),
+                    restaurant.name,
+                ],
+            )
     return {"result": "OK"}, 200
 
 
@@ -53,11 +132,11 @@ app.add_api("swagger.yml")
 application = app.app
 
 
-def init_flask_app(app):
+def init_flask_app(app, conf_type: str = "config.DebugConfiguration"):
     """
     This method init all the configuration from the flask app
     """
-    app.config.from_object("config.DebugConfiguration")
+    app.config.from_object(conf_type)
 
 
 if __name__ == "__main__":
