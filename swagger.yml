@@ -124,15 +124,9 @@ components:
         - friends
         - user_positive
         - past_restaurants
+        - future_restaurants
       type: object
       properties:
-        friends:
-          type: array
-          description: the list of friend included inside the booking
-          items:
-            type: string
-            example: "friend@email.com"
-          example: [ "friend@email.com" ]
         user_positive:
           type: object
           description: The user information that have a new covid19 positive result
@@ -148,6 +142,12 @@ components:
           description: the list of restaurants where the person positive was.
           items:
             $ref: '#/components/schemas/RestaurantInformation'
+        future_restaurants:
+          type: array
+          description: the list of restaurants where the person positive had a new reservation.
+          items:
+              $ref: '#/components/schemas/RestaurantInformation'
+
     PositiveUser:
       required:
         - email
@@ -166,6 +166,7 @@ components:
         - owner_email
         - owner_name
         - date_booking
+        - friends
       type: object
       properties:
           name:
@@ -181,6 +182,13 @@ components:
             type: string
             format: date-time
             example: 2017-07-21T17:32:28Z
+          friends:
+            type: array
+            description: the list of friend included inside the booking
+            items:
+              type: string
+              example: "friend@email.com"
+            example: [ "friend@email.com" ]
     Result:
       required:
         - result

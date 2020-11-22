@@ -5,7 +5,7 @@ import logging
 import connexion
 from flask import request, current_app
 from utils.dispaccer_events import DispatcherMessage
-from app_constant import REGISTRATION_EMAIL, CONFIRMATION_BOOKING, NEW_POSITIVE_WAS_IN_RESTAURANT, EMAIL_TO_FRIEND
+from app_constant import REGISTRATION_EMAIL, CONFIRMATION_BOOKING, NEW_POSITIVE_WAS_IN_RESTAURANT, EMAIL_TO_FRIEND, NEW_COVID_TO_RESTAURANT_BOOKING, FUTURE_RESERVATION_FRIENDS
 from model.restaurant_model import RestaurantsModel
 from model.user_model import UserModel
 
@@ -70,17 +70,31 @@ def send_possible_covid_contact():
         DispatcherMessage.send_message(NEW_POSITIVE_WAS_IN_RESTAURANT,
                                        [restaurant.owner_email, restaurant.owner_email,
                                         str(restaurant.date_booking), restaurant.name])
+        for json_friend in restaurant.friends:
+            DispatcherMessage.send_message(EMAIL_TO_FRIEND,
+                                           [json_friend, restaurant.owner_email,
+                                            str(restaurant.date_booking), restaurant.name])
+
+    json_restaurant = json_request["future_restaurants"]
+    restaurants = []
+    for json_rest in json_restaurant:
+        restaurant = RestaurantsModel()
+        restaurant.fill_from_json(json_rest)
+        restaurants.append(restaurant)
+        DispatcherMessage.send_message(NEW_COVID_TO_RESTAURANT_BOOKING,
+                                       [restaurant.owner_email, restaurant.owner_email,
+                                        str(restaurant.date_booking), restaurant.name])
+        for json_friend in restaurant.friends:
+            DispatcherMessage.send_message(FUTURE_RESERVATION_FRIENDS,
+                                           [json_friend, restaurant.owner_email,
+                                            str(restaurant.date_booking), restaurant.name])
 
     # A message to the owner of the restaurants
     # it take in inputs the following parameter
     # to_email, to_name, date_possible_contact, restaurant_name
     # TODO only the list of friend is not enogth, maybe I need to inject this inside the restaurants
-    json_friends = json_request["friends"]
-    for json_friend in json_friends:
-        DispatcherMessage.send_message(EMAIL_TO_FRIEND,
-                                       [json_friend, restaurant.owner_email,
-                                        str(restaurant.date_booking), restaurant.name])
     return {"result", "OK"}, 200
+
 
 logging.basicConfig(level=logging.DEBUG)
 app = connexion.App(__name__)

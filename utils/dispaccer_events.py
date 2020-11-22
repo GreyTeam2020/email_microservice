@@ -5,6 +5,7 @@ from background import (
     send_possible_positive_contact_to_friend,
     send_possible_positive_contact_celery,
     send_booking_confirmation_to_friends_celery,
+    send_booking_problem_to_friends_celery,
     send_positive_in_restaurant,
 )
 
@@ -44,3 +45,5 @@ class DispatcherMessage:
             send_possible_positive_contact_celery.apply_async(args=params)
         elif type_message == CONFIRMATION_BOOKING:
             send_booking_confirmation_to_friends_celery.apply_async(args=params)
+        elif type_message == FUTURE_RESERVATION_FRIENDS:
+            send_booking_problem_to_friends_celery.apply_async(args=params)
