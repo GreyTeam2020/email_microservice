@@ -14,7 +14,7 @@ class RestaurantsModel:
         }
         """
         self.name = json_obj["name"]
-        self.owner_email = json_obj["email"]
+        self.owner_email = json_obj["owner_email"]
         self.date_booking = datetime.strptime(
             json_obj["date_booking"], "%Y-%m-%dT%H:%M:%SZ"
         )

@@ -133,11 +133,11 @@ app.add_api("swagger.yml")
 application = app.app
 
 
-def init_flask_app(app):
+def init_flask_app(app, conf_type: str = "config.DebugConfiguration"):
     """
     This method init all the configuration from the flask app
     """
-    app.config.from_object("config.DebugConfiguration")
+    app.config.from_object(conf_type)
 
 
 if __name__ == "__main__":

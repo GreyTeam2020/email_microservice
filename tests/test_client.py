@@ -1,4 +1,4 @@
-from tests.utils import Utils
+from tests.utils_tests import Utils
 
 
 class TestClient:
@@ -25,7 +25,7 @@ class TestClient:
             "friends": ["friend@email.com"],
             "booking_time": "2017-07-21T17:32:28+00:00",
         }
-        response = Utils.new_registration(client, request)
+        response = Utils.new_booking(client, request)
         assert response.status_code == 200
 
     def test_send_email_posible_covid_contact(self, client):
