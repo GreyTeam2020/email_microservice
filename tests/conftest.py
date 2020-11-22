@@ -1,6 +1,5 @@
 import sys, os
 
-from .utils import Utils
 from fixtures.client import *
 from fixtures.clean_db import *
 
