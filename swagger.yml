@@ -44,6 +44,25 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/Result'
+    /send_email/send_contact:
+      post:
+        tags:
+          - Send Email
+        summary: Send an email to all people that need to be allert about covid 19 contacts
+        operationId: app.send_possible_covid_contact
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PossibleContacts'
+        responses:
+          200:
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Result'
 components:
   schemas:
     UserRegistered:
@@ -100,6 +119,68 @@ components:
           type: string
           format: date-time
           example: 2017-07-21T17:32:28Z
+    PossibleContacts:
+      required:
+        - friends
+        - user_positive
+        - past_restaurants
+      type: object
+      properties:
+        friends:
+          type: array
+          description: the list of friend included inside the booking
+          items:
+            type: string
+            example: "friend@email.com"
+          example: [ "friend@email.com" ]
+        user_positive:
+          type: object
+          description: The user information that have a new covid19 positive result
+          properties:
+            email:
+              type: string
+              example: "user@asu.edu"
+            name:
+              type: string
+              example: "User"
+        past_restaurants:
+          type: array
+          description: the list of restaurants where the person positive was.
+          items:
+            $ref: '#/components/schemas/RestaurantInformation'
+    PositiveUser:
+      required:
+        - email
+        - name
+      type: object
+      properties:
+        email:
+          type: string
+          example: "user@asu.edu"
+        name:
+          type: string
+          example: "User"
+    RestaurantInformation:
+      required:
+        - name
+        - owner_email
+        - owner_name
+        - date_booking
+      type: object
+      properties:
+          name:
+            type: string
+            example: "Il Ristorante che non c'è"
+          owner_email:
+            type: string
+            example: "user@mail.com"
+          owner_name:
+            type: string
+            example: "Owner"
+          date_booking:
+            type: string
+            format: date-time
+            example: 2017-07-21T17:32:28Z
     Result:
       required:
         - result

@@ -120,6 +120,10 @@ def send_email(subject, body, recipient):
 def send_positive_booking_in_restaurant(to_email, to_name, email_user, restaurant_name):
     """
     A positive COVID-19 booked in a restaurant
+    :param to_email: email owner
+    :param to_name: Name owner
+    :param email_user: User email
+    :param restaurant_name: Restaurants name
     """
     subject = "A COVID-19 positive person has a booking in your restaurant"
     body = """ 
