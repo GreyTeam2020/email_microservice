@@ -5,9 +5,13 @@ class UserModel:
         in this case the user
         :param json_obj: A object that looks like:
         {
-            "email": "user@asu.edu",
-            "name": "User"
-        }
+                                    "email": user.email,
+                                    "name": user.firstname,
+                                    "restaurant_name": restaurant.name,
+                                    "date": start,
+                                }
         """
         self.name = json_obj["name"]
         self.email = json_obj["email"]
+        self.restaurant_name = json_obj["restaurant_name"]
+        self.date = json_obj["date"]

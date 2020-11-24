@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from tests.utils_tests import Utils
 
 
@@ -35,25 +37,28 @@ class TestClient:
         :param client: flask test client
         """
         request = {
-            "user_positive": {"email": "user@asu.edu", "name": "User"},
-            "past_restaurants": [
-                {
-                    "name": "Il Ristorante che non c'è",
-                    "owner_email": "user@mail.com",
-                    "owner_name": "Owner",
-                    "date_booking": "2017-07-21T17:32:28Z",
-                    "friends": ["friend@email.com"],
-                }
-            ],
-            "future_restaurants": [
-                {
-                    "name": "Il Ristorante che non c'è",
-                    "owner_email": "user@mail.com",
-                    "owner_name": "Owner",
-                    "date_booking": "2017-07-21T17:32:28Z",
-                    "friends": ["friend@email.com"],
-                }
-            ],
+                "friends": ["a@s.me"],
+                "contacts": [
+                    {
+                    "email": "a@a.com",
+                    "name": "user.firstname",
+                    "restaurant_name": "restaurant.name",
+                    "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    }],
+                "past_restaurants": [
+                    {
+                    "email": "a@a.com",
+                    "name": "restaurant.name",
+                    "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    }],
+                "reservation_restaurants": [
+                    {
+                        "email": "v@a.com",
+                        "name": "restaurant.name",
+                        "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "customer_email": "customer_email@email.com",
+                    }
+                ],
         }
         response = Utils.possible_covid_contact(client, request)
         assert response.status_code == 200

@@ -1,2 +1,2 @@
 from .user_model import UserModel
-from .restaurant_model import RestaurantsModel
+from .past_restaurant_model import PastRestaurantsModel

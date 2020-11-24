@@ -121,31 +121,28 @@ components:
           example: 2017-07-21T17:32:28Z
     PossibleContacts:
       required:
-        - user_positive
+        - friends
         - past_restaurants
-        - future_restaurants
+        - reservation_restaurants
       type: object
       properties:
-        user_positive:
-          type: object
-          description: The user information that have a new covid19 positive result
-          properties:
-            email:
-              type: string
-              example: "user@asu.edu"
-            name:
-              type: string
-              example: "User"
+        friends:
+          type: array
+          description: The list of friend included inside the booking
+          items:
+            type: string
+            example: "friend@email.com"
+          example: [ "friend@email.com" ]
         past_restaurants:
           type: array
           description: the list of restaurants where the person positive was.
           items:
-            $ref: '#/components/schemas/RestaurantInformation'
-        future_restaurants:
+            $ref: '#/components/schemas/PastRestaurant'
+        reservation_restaurants:
           type: array
           description: the list of restaurants where the person positive had a new reservation.
           items:
-              $ref: '#/components/schemas/RestaurantInformation'
+              $ref: '#/components/schemas/FuturetRestaurant'
 
     PositiveUser:
       required:
@@ -159,35 +156,44 @@ components:
         name:
           type: string
           example: "User"
-    RestaurantInformation:
+    PastRestaurant:
       required:
         - name
-        - owner_email
-        - owner_name
-        - date_booking
-        - friends
+        - email
+        - date
       type: object
       properties:
           name:
             type: string
             example: "Il Ristorante che non c'è"
-          owner_email:
+          email:
             type: string
             example: "user@mail.com"
-          owner_name:
-            type: string
-            example: "Owner"
-          date_booking:
+          date:
             type: string
             format: date-time
             example: 2017-07-21T17:32:28Z
-          friends:
-            type: array
-            description: the list of friend included inside the booking
-            items:
-              type: string
-              example: "friend@email.com"
-            example: [ "friend@email.com" ]
+    FuturetRestaurant:
+      required:
+        - name
+        - email
+        - date
+        - customer_email
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Il Ristorante che non c'è"
+        email:
+          type: string
+          example: "user@mail.com"
+        date:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+        customer_email:
+          type: string
+          example: "user@mail.com"
     Result:
       required:
         - result

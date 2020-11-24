@@ -4,6 +4,7 @@ omit =
     model/__init__.py
     utils/__init__.py
     tests/conftest.py
+    send_mail.py
     setup.py
     services/__init__.py
     config.py
