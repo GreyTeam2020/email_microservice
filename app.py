@@ -11,9 +11,9 @@ from app_constant import (
     NEW_POSITIVE_WAS_IN_RESTAURANT,
     EMAIL_TO_FRIEND,
     NEW_COVID_TO_RESTAURANT_BOOKING,
-    FUTURE_RESERVATION_FRIENDS,
 )
-from model.restaurant_model import RestaurantsModel
+from model.past_restaurant_model import PastRestaurantsModel
+from model.future_restaurant_model import FutureRestaurantsModel
 from model.user_model import UserModel
 
 
@@ -59,22 +59,58 @@ def send_possible_covid_contact():
     """
     This is the unique method to send the possible covid19 contacts email.
     :return: the flask response that looks like {"result": "OK"} with status code 200
+
+    {
+            "friends": ["a@s.me],
+            "contacts": [{
+                                    "email": user.email,
+                                    "name": user.firstname,
+                                    "restaurant_name": restaurant.name,
+                                    "date": start,
+                                }],
+            "past_restaurants": [{
+                            "email": restaurant["owner_email"],
+                            "name": restaurant["name"],
+                            "date": start,
+                        }],
+            "reservation_restaurants": [{
+                        "email": restaurant["owner_email"],
+                        "name": restaurant["name"],
+                        "date": date,
+                        "customer_email": customer_email,
+                    }],
+        }
     """
     json_request = request.get_json()
     current_app.logger.debug("Request with body\n{}".format(json_request))
 
+    json_friends = json_request["friends"]
+    current_app.logger.debug("List of friend is: {}".format(json_friends))
+    for json_friend in json_friends:
+        DispatcherMessage.send_message(
+            EMAIL_TO_FRIEND,
+            [
+                json_friend,
+                "",
+                "",
+            ],
+        )
+
     # A message to the friends, it take the following paramiters
     # to_email, date_possible_contact, restaurant_name
-    json_user = json_request["user_positive"]
-    user_positive = UserModel()
-    user_positive.fill_from_json(json_user)
+    json_users = json_request["contacts"]
+    contacts = []
+    for json_user in json_users:
+        user_positive = UserModel()
+        user_positive.fill_from_json(json_user)
+        contacts.append(user_positive)
 
     # A message to the restaurants booking
     # to_email, to_name, email_user, restaurant_name
     json_restaurant = json_request["past_restaurants"]
     restaurants = []
     for json_rest in json_restaurant:
-        restaurant = RestaurantsModel()
+        restaurant = PastRestaurantsModel()
         restaurant.fill_from_json(json_rest)
         restaurants.append(restaurant)
         DispatcherMessage.send_message(
@@ -86,20 +122,11 @@ def send_possible_covid_contact():
                 restaurant.name,
             ],
         )
-        for json_friend in restaurant.friends:
-            DispatcherMessage.send_message(
-                EMAIL_TO_FRIEND,
-                [
-                    json_friend,
-                    str(restaurant.date_booking),
-                    restaurant.name,
-                ],
-            )
 
-    json_restaurant = json_request["future_restaurants"]
+    json_restaurant = json_request["reservation_restaurants"]
     restaurants = []
     for json_rest in json_restaurant:
-        restaurant = RestaurantsModel()
+        restaurant = FutureRestaurantsModel()
         restaurant.fill_from_json(json_rest)
         restaurants.append(restaurant)
         DispatcherMessage.send_message(
@@ -111,16 +138,7 @@ def send_possible_covid_contact():
                 restaurant.name,
             ],
         )
-        for json_friend in restaurant.friends:
-            DispatcherMessage.send_message(
-                FUTURE_RESERVATION_FRIENDS,
-                [
-                    json_friend,
-                    restaurant.owner_email,
-                    str(restaurant.date_booking),
-                    restaurant.name,
-                ],
-            )
+
     return {"result": "OK"}, 200
 
 
