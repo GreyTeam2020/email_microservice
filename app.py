@@ -158,5 +158,6 @@ def init_flask_app(app, conf_type: str = "config.DebugConfiguration"):
 
 
 if __name__ == "__main__":
-    init_flask_app(application)
+    # init_flask_app(application)
+    init_flask_app(application, "config.BaseConfiguration")
     app.run(port=5001)
