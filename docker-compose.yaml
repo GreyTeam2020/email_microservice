@@ -8,6 +8,8 @@ services:
             - "5001:5001"
         expose:
             - "5001"
+        volumes:
+            - .:/code
     celery:
         depends_on:
             - redis
